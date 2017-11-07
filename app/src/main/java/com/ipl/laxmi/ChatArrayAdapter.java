@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.gotev.speech.ui.SpeechProgressView;
@@ -50,10 +51,40 @@ class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
             row = inflater.inflate(R.layout.right, parent, false);
         } else {
             row = inflater.inflate(R.layout.left, parent, false);
+
+            boolean isRemainder = true;
+            boolean isFuel = true;
+            boolean isJounney = false;
+
+            if(isRemainder) {
+                View fuelCard = row.findViewById(R.id.remainder_card_include);
+                fuelCard.setVisibility(View.VISIBLE);
+            }
+
+            if(isFuel) {
+                View fuelCard = row.findViewById(R.id.fuel_card_include);
+                fuelCard.setVisibility(View.VISIBLE);
+                LinearLayout fuelViewRoot = (LinearLayout) row.findViewById(R.id.fuel_item_root);
+                View fuelItem = inflater.inflate(R.layout.fuel_item, null);
+                fuelViewRoot.addView(fuelItem);
+            }
+
+            if(isJounney) {
+                View journeyCard = row.findViewById(R.id.journey_card_include);
+                journeyCard.setVisibility(View.VISIBLE);
+            }
+
+
+
             //speechProgressView = (SpeechProgressView) row.findViewById(R.id.progress);
         }
         chatText = (TextView) row.findViewById(R.id.msgr);
         chatText.setText(chatMessageObj.message);
+
+
+
+
+
         /*if(speechProgressView!=null) {
             if (TextUtils.isEmpty(chatMessageObj.message)) {
                 speechProgressView.setVisibility(View.VISIBLE);

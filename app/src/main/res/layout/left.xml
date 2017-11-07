@@ -10,7 +10,6 @@
 
     <LinearLayout
         android:id="@+id/messenger"
-        android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -18,7 +17,8 @@
         android:layout_marginTop="16dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="4dp">
+        android:padding="4dp"
+        android:visibility="visible">
 
 
         <net.steamcrafted.materialiconlib.MaterialIconView
@@ -49,12 +49,18 @@
     </LinearLayout>
 
     <include
-        android:id="@+id/remainder_card"
-        android:visibility="gone"
-        layout="@layout/remainder_card_layout"/>
+        android:id="@+id/remainder_card_include"
+        layout="@layout/remainder_card_layout"
+        android:visibility="gone" />
+
     <include
-        android:id="@+id/fuel"
-        android:visibility="gone"
-        layout="@layout/fuel_card"/>
+        android:id="@+id/fuel_card_include"
+        layout="@layout/fuel_card"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/journey_card_include"
+        layout="@layout/journeys_card"
+        android:visibility="gone" />
 </LinearLayout>
 
