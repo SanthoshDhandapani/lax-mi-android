@@ -11,6 +11,7 @@ public class ChatMessage {
     public String message;
     public JSONObject data;
 
+
     public ChatMessage(boolean rightSide, String message) {
         super();
         this.rightSide = rightSide;
