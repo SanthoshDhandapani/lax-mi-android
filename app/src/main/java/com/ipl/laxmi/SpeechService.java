@@ -32,7 +32,7 @@ public class SpeechService  {
     OnSpeechListener speechListener;
     WeakReference<MainActivity> activityWeakReference;
     private static final String BASE_URL = "http://172.32.18.114:8081";
-    private static final String NAME = "Santhosh";
+    private static final String NAME = "San";
     /*public SpeechService() {
         // Used to name the worker thread
         // Important only for debugging
