@@ -167,8 +167,8 @@ public class SpeechService  {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("userSays", MainActivity.NAME);
-                params.put("userName", query);
+                params.put("userName", MainActivity.NAME);
+                params.put("userSays", query);
                 return params;
             }
         };

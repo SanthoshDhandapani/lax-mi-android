@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import net.gotev.speech.ui.SpeechProgressView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +27,10 @@ class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
     private SpeechProgressView speechProgressView;
     private List<ChatMessage> chatMessageList = new ArrayList<>();
     private Context context;
+
+    public final String ACTION_REQUIRED_THINGS = "necessarythings";
+    public final String ACTION_FUEL_LEVEL = "fuellevel";
+    public final String ACTION_JOUNEYS = "journeys";
 
     @Override
     public void add(ChatMessage object) {
@@ -46,6 +53,17 @@ class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
 
     public View getView(int position, View row, ViewGroup parent) {
         ChatMessage chatMessageObj = getItem(position);
+        JSONArray data = null;
+        String action = "";
+        if(chatMessageObj.data!=null) {
+            try {
+                action = chatMessageObj.data.getString("action");
+                data = chatMessageObj.data.getJSONArray("Data");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (chatMessageObj.rightSide) {
             row = inflater.inflate(R.layout.right, parent, false);
@@ -81,10 +99,14 @@ class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
         chatText = (TextView) row.findViewById(R.id.msgr);
         chatText.setText(chatMessageObj.message);
 
+        if(action.equals(ACTION_JOUNEYS)) {
 
+        }
+        else if(action.equals(ACTION_FUEL_LEVEL)) {
 
+        } else if(action.equals(ACTION_JOUNEYS)) {
 
-
+        }
         /*if(speechProgressView!=null) {
             if (TextUtils.isEmpty(chatMessageObj.message)) {
                 speechProgressView.setVisibility(View.VISIBLE);

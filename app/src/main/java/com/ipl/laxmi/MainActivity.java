@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
                 } else {
                     if(NAME.equals(SIVA)) {
                         currentSeq = SEQ_THREE;
+                    } else {
+                        currentSeq = SEQ_ONE;
                     }
                 }
                 mSpeechService.speakRequest(currentSeq);
@@ -288,8 +290,8 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
         aiService.setListener(this);
     }
 
-    private boolean sendResponse(String text) {
-        chatArrayAdapter.add(new ChatMessage(!rightSide, text));
+    private boolean sendResponse(String text, JSONObject respObj) {
+        chatArrayAdapter.add(new ChatMessage(!rightSide, text, respObj));
         return true;
     }
 
@@ -385,8 +387,7 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
         // process response object
         sendChatMessage(response.getResult().getResolvedQuery());
         speakerbox.play(result.getFulfillment().getSpeech());
-        sendResponse(result.getFulfillment().getSpeech());
-
+        sendResponse(result.getFulfillment().getSpeech(), null);
 
         /**
 
@@ -408,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
 
     @Override
     public void onError(AIError error) { // here process error
-        sendResponse(error.toString());
+        sendResponse(error.toString(), null);
     }
 
     @Override
@@ -437,7 +438,12 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
         try {
             JSONObject responseObj = new JSONObject(response);
             String message = responseObj.getString("result");
-            sendResponse(message);
+            JSONObject dataObj = null;
+            try {
+                dataObj = new JSONObject(message);
+                message = dataObj.getString("message");
+            } catch (JSONException e) {}
+            sendResponse(message,dataObj);
             chatArrayAdapter.notifyDataSetChanged();
             speakerbox.play(message);
         } catch (JSONException e) {
