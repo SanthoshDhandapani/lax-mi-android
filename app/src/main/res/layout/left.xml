@@ -1,40 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
-    android:layout_marginLeft="12dp"
-    android:layout_marginTop="16dp"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="4dp">
+    android:layout_width="match_parent"
+    android:layout_margin="16dp"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
 
-
-    <net.steamcrafted.materialiconlib.MaterialIconView
-        android:id="@+id/icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/circle"
-        android:scaleType="center"
-        app:materialIcon="face"
-        app:materialIconColor="#fff"
-        app:materialIconSize="36dp" />
-
-    <TextView
-        android:id="@+id/msgr"
-        android:layout_width="240dp"
+    <LinearLayout
+        android:id="@+id/messenger"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginStart="10dp"
-        android:background="@drawable/left_textview"
-        android:elevation="4dp"
-        android:fadingEdgeLength="8dp"
-        android:text="@string/sample"
-        android:textColor="@android:color/black" />
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <net.steamcrafted.materialiconlib.MaterialIconView
+            android:id="@+id/icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/circle"
+            android:scaleType="center"
+            app:materialIcon="face"
+            app:materialIconColor="#fff"
+            app:materialIconSize="36dp" />
+
+        <TextView
+            android:id="@+id/msgr"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/left_textview"
+            android:elevation="4dp"
+            android:fadingEdgeLength="8dp"
+            android:text="@string/sample"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <include
+        android:id="@+id/remainder_card"
+        android:visibility="gone"
+        layout="@layout/remainder_card_layout"/>
+
 </LinearLayout>
 
