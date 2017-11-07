@@ -8,5 +8,5 @@ import net.gotev.speech.SpeechRecognitionNotAvailable;
 
 public interface OnSpeechListener {
     void onSpeechStart();
-    void onSpeechError(SpeechRecognitionNotAvailable exc);
+    void onSpeechError(Exception exc);
 }

@@ -439,7 +439,7 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
     }
 
     @Override
-    public void onSpeechError(SpeechRecognitionNotAvailable exc) {
+    public void onSpeechError(Exception exc) {
 
     }
 }

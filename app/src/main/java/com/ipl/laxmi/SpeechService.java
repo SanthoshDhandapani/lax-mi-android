@@ -108,7 +108,7 @@ public class SpeechService  {
                     //startListening();
                 }
             });
-        } catch (SpeechRecognitionNotAvailable exc) {
+        } catch (Exception exc) {
             Log.e("speech", "Speech recognition is not available on this device!");
             if(speechListener!=null)
                 speechListener.onSpeechError(exc);
