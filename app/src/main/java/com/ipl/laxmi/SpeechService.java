@@ -31,7 +31,8 @@ public class SpeechService  {
     ApiResponseListener apiResponseListener;
     OnSpeechListener speechListener;
     WeakReference<MainActivity> activityWeakReference;
-    private static final String BASE_URL = "http://172.32.18.114:8081";
+    //http://172.32.18.114:8081
+    private static final String BASE_URL = "http://172.32.11.17:8081";
     /*public SpeechService() {
         // Used to name the worker thread
         // Important only for debugging
@@ -166,8 +167,8 @@ public class SpeechService  {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("name", MainActivity.NAME);
-                params.put("query", query);
+                params.put("userSays", MainActivity.NAME);
+                params.put("userName", query);
                 return params;
             }
         };
