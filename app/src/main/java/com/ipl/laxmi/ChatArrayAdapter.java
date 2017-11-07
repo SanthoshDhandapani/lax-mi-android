@@ -5,11 +5,14 @@ package com.ipl.laxmi;
  */
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import net.gotev.speech.ui.SpeechProgressView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
 
     private TextView chatText;
+    private SpeechProgressView speechProgressView;
     private List<ChatMessage> chatMessageList = new ArrayList<>();
     private Context context;
 
@@ -46,9 +50,23 @@ class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
             row = inflater.inflate(R.layout.right, parent, false);
         } else {
             row = inflater.inflate(R.layout.left, parent, false);
+            //speechProgressView = (SpeechProgressView) row.findViewById(R.id.progress);
         }
         chatText = (TextView) row.findViewById(R.id.msgr);
         chatText.setText(chatMessageObj.message);
+        /*if(speechProgressView!=null) {
+            if (TextUtils.isEmpty(chatMessageObj.message)) {
+                speechProgressView.setVisibility(View.VISIBLE);
+                speechProgressView.play();
+                chatText.setVisibility(View.GONE);
+            } else {
+                speechProgressView.stop();
+                speechProgressView.setVisibility(View.GONE);
+                chatText.setVisibility(View.VISIBLE);
+            }
+        } else {
+            chatText.setVisibility(View.VISIBLE);
+        }*/
         return row;
     }
 }

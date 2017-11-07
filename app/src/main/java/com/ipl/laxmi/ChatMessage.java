@@ -13,4 +13,8 @@ public class ChatMessage {
         this.rightSide = rightSide;
         this.message = message;
     }
+
+    public void setMessage(String msg) {
+        this.message = msg;
+    }
 }

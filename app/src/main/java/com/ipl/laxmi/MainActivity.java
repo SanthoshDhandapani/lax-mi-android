@@ -1,17 +1,23 @@
 package com.ipl.laxmi;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +28,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.mapzen.speakerbox.Speakerbox;
+
+import net.gotev.speech.Speech;
+import net.gotev.speech.SpeechDelegate;
+import net.gotev.speech.SpeechRecognitionNotAvailable;
+import net.gotev.speech.ui.SpeechProgressView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 import ai.api.AIConfiguration;
 import ai.api.AIListener;
@@ -35,7 +52,7 @@ import ai.api.model.Result;
 /**
  * Created by Santhosh on 06/11/2017.
  */
-public class MainActivity extends AppCompatActivity implements AIListener {
+public class MainActivity extends AppCompatActivity implements AIListener, OnSpeechListener, ApiResponseListener {
     private static final String TAG = "ChatActivity";
     private static final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 12;
     private static final int MY_PERMISSIONS_REQUEST_INTERNET = 35;
@@ -50,17 +67,27 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     private Animation pop_out_anim;
     private Speakerbox speakerbox;
     private boolean rightSide = true; //true if you want message on right rightSide
+    SpeechService mSpeechService;
+    ChatMessage botChatMessage;
+    View progress, speechInputView;
+    SpeechProgressView speechProgressView;
+    //boolean mBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        speakerbox = new Speakerbox(this.getApplication());
+        Speech.init(this);
+        mSpeechService = new SpeechService(new WeakReference<>(this), this, this);
 
+        speakerbox = new Speakerbox(this.getApplication());
         sendButton = (FloatingActionButton) findViewById(R.id.btn_send);
         listView = (ListView) findViewById(R.id.msgview);
         listenButton = (FloatingActionButton) findViewById(R.id.btn_mic);
         chatText = (EditText) findViewById(R.id.msg);
+        progress = findViewById(R.id.progress);
+        speechInputView = findViewById(R.id.speech_input_view);
+        speechProgressView = (SpeechProgressView) findViewById(R.id.speech_progress);
 
         pop_in_anim = AnimationUtils.loadAnimation(this, R.anim.pop_in);
         pop_out_anim = AnimationUtils.loadAnimation(this, R.anim.pop_out);
@@ -181,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
                         Manifest.permission.RECORD_AUDIO)
                         != PackageManager.PERMISSION_GRANTED) {
                     // Should we show an explanation?
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(getParent(),
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
                             Manifest.permission.RECORD_AUDIO)) {
 
                         showExplanation("Permission Needed", "Rationale", Manifest.permission.RECORD_AUDIO,
@@ -202,7 +229,8 @@ public class MainActivity extends AppCompatActivity implements AIListener {
                     }
 
                 } else {
-                    aiService.startListening();
+                    //aiService.startListening();
+                    mSpeechService.startListening();
                 }
             }
         });
@@ -219,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
             }
         });
 
-        final AIConfiguration config = new AIConfiguration("b944f4dfae0c4420980b542056e4c1b2",
+        final AIConfiguration config = new AIConfiguration("",
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
 
@@ -228,9 +256,8 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     }
 
     private boolean sendResponse(String text) {
-        if (text.length() == 0)
-            return false;
-        chatArrayAdapter.add(new ChatMessage(!rightSide, text));
+        botChatMessage = new ChatMessage(!rightSide, text);
+        chatArrayAdapter.add(botChatMessage);
         return true;
     }
 
@@ -281,6 +308,45 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         }
     }
 
+    /*
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Bind to LocalService
+        Intent intent = new Intent(this, SpeechService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
+
+    *//** Defines callbacks for service binding, passed to bindService() *//*
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            SpeechService.LocalBinder binder = (SpeechService.LocalBinder) service;
+            mSpeechService = binder.getService();
+            mSpeechService.apiResponseListener = MainActivity.this;
+            mSpeechService.speechListener = MainActivity.this;
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };*/
+
     public void onResult(final AIResponse response) { // here process response
         Result result = response.getResult();
         Log.i(TAG, "Action: " + result.getAction());
@@ -330,6 +396,50 @@ public class MainActivity extends AppCompatActivity implements AIListener {
 
     @Override
     public void onListeningFinished() { // indicate stop listening here
+
+    }
+
+    @Override
+    public void onApiResponse(String response) {
+        Log.d("response is ", response);
+        try {
+            JSONObject responseObj = new JSONObject(response);
+            String message = responseObj.getString("result");
+            botChatMessage.setMessage(message);
+            chatArrayAdapter.notifyDataSetChanged();
+            speakerbox.play(message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+       // mSpeechService.startListening();
+    }
+
+    @Override
+    public void onApiErrorResponse() {
+      //  mSpeechService.startListening();
+    }
+
+    @Override
+    public void onBeforeRequest(String query) {
+        speechProgressView.stop();
+        progress.setVisibility(View.GONE);
+        speechInputView.setVisibility(View.VISIBLE);
+        if(!TextUtils.isEmpty(query)) {
+            sendChatMessage(query);
+            sendResponse("");
+        }
+    }
+
+    @Override
+    public void onSpeechStart() {
+        speechInputView.setVisibility(View.GONE);
+        progress.setVisibility(View.VISIBLE);
+        speechProgressView.play();
+    }
+
+    @Override
+    public void onSpeechError(SpeechRecognitionNotAvailable exc) {
 
     }
 }

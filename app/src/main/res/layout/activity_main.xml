@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#efefef"
     android:orientation="vertical"
-    tools:context="edu.purdue.kroppt.chatbot.MainActivity">
+    tools:context="com.ipl.laxmi.MainActivity">
 
     <ListView
         android:id="@+id/msgview"
@@ -25,6 +25,7 @@
         android:layout_height="0px"/>
 
     <LinearLayout
+        android:id="@+id/speech_input_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -68,5 +69,21 @@
                 android:tint="#efefef" />
         </LinearLayout>
 
+
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        android:clipToPadding="false">
+        <net.gotev.speech.ui.SpeechProgressView
+            android:id="@+id/speech_progress"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
+    </LinearLayout>
+
 </LinearLayout>
