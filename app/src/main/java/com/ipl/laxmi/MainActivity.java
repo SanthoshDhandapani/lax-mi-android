@@ -52,7 +52,7 @@ import ai.api.model.Result;
 /**
  * Created by Santhosh on 06/11/2017.
  */
-public class MainActivity extends AppCompatActivity implements AIListener, OnSpeechListener, ApiResponseListener {
+public class MainActivity extends AppCompatActivity implements AIListener, OnSpeechListener, ApiResponseListener, View.OnClickListener, View.OnLongClickListener {
     private static final String TAG = "ChatActivity";
     private static final int MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 12;
     private static final int MY_PERMISSIONS_REQUEST_INTERNET = 35;
@@ -68,15 +68,48 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
     private Speakerbox speakerbox;
     private boolean rightSide = true; //true if you want message on right rightSide
     SpeechService mSpeechService;
-    ChatMessage botChatMessage;
     View progress, speechInputView;
     SpeechProgressView speechProgressView;
+
+    public static final String SAN = "san";
+    public static final String SIVA = "siva";
+    public static final String NAME = SAN;
+    public static final String SEQ_ONE = "wishme";
+    public static final String SEQ_TWO = "checkfuellevel";
+    public static final String SEQ_THREE = "tirepressurelow";
+
+    public String currentSeq = "";
+
     //boolean mBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        View screen = findViewById(R.id.screen);
+        screen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSpeechService.startListening();
+            }
+        });
+        screen.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(TextUtils.isEmpty(currentSeq)) {
+                    currentSeq = SEQ_ONE;
+                } else if(currentSeq.equals(SEQ_ONE)) {
+                    currentSeq = SEQ_TWO;
+                } else {
+                    if(NAME.equals(SIVA)) {
+                        currentSeq = SEQ_THREE;
+                    }
+                }
+                mSpeechService.speakRequest(currentSeq);
+                return true;
+            }
+        });
         Speech.init(this);
         mSpeechService = new SpeechService(new WeakReference<>(this), this, this);
 
@@ -256,8 +289,7 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
     }
 
     private boolean sendResponse(String text) {
-        botChatMessage = new ChatMessage(!rightSide, text);
-        chatArrayAdapter.add(botChatMessage);
+        chatArrayAdapter.add(new ChatMessage(!rightSide, text));
         return true;
     }
 
@@ -405,7 +437,7 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
         try {
             JSONObject responseObj = new JSONObject(response);
             String message = responseObj.getString("result");
-            botChatMessage.setMessage(message);
+            sendResponse(message);
             chatArrayAdapter.notifyDataSetChanged();
             speakerbox.play(message);
         } catch (JSONException e) {
@@ -427,7 +459,6 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
         speechInputView.setVisibility(View.VISIBLE);
         if(!TextUtils.isEmpty(query)) {
             sendChatMessage(query);
-            sendResponse("");
         }
     }
 
@@ -441,5 +472,16 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
     @Override
     public void onSpeechError(Exception exc) {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        mSpeechService.startListening();
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        mSpeechService.speakRequest("Hi");
+        return false;
     }
 }

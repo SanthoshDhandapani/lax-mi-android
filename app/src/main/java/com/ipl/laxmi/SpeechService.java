@@ -32,7 +32,6 @@ public class SpeechService  {
     OnSpeechListener speechListener;
     WeakReference<MainActivity> activityWeakReference;
     private static final String BASE_URL = "http://172.32.18.114:8081";
-    private static final String NAME = "San";
     /*public SpeechService() {
         // Used to name the worker thread
         // Important only for debugging
@@ -138,7 +137,7 @@ public class SpeechService  {
         Speech.getInstance().stopListening();
     };
 
-    private void speakRequest(final String query) {
+    public void speakRequest(final String query) {
         RequestQueue queue = Volley.newRequestQueue(activityWeakReference.get());
 
         // Request a string response from the provided URL.
@@ -167,7 +166,7 @@ public class SpeechService  {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("name", NAME);
+                params.put("name", MainActivity.NAME);
                 params.put("query", query);
                 return params;
             }
