@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId "com.ipl.laxmi"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -28,8 +28,11 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     compile 'com.mapzen.android:speakerbox:1.4.1'
     compile 'ai.api:sdk:1.9.4@aar'
+    compile 'net.gotev:speech:1.1.2'
+
     // api.ai SDK dependencies
     compile 'com.google.code.gson:gson:2.3'
     compile 'commons-io:commons-io:2.4'
     testCompile 'junit:junit:4.12'
+    compile 'com.android.volley:volley:1.0.0'
 }

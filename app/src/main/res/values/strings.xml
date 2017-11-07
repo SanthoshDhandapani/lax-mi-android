@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ChatBot</string>
+    <string name="app_name">LaxMi</string>
     <string name="send">Send</string>
     <string name="text_hint">Say something…</string>
     <string name="sample">Sample text</string>
