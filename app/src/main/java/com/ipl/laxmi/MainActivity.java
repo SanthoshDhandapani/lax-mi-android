@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.mapzen.speakerbox.Speakerbox;
 import net.gotev.speech.Speech;
 import net.gotev.speech.SpeechDelegate;
 import net.gotev.speech.SpeechRecognitionNotAvailable;
+import net.gotev.speech.ui.SpeechProgressView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
     private Speakerbox speakerbox;
     private boolean rightSide = true; //true if you want message on right rightSide
     SpeechService mSpeechService;
+    ChatMessage botChatMessage;
+    View progress, speechInputView;
+    SpeechProgressView speechProgressView;
     //boolean mBound = false;
 
     @Override
@@ -80,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
         listView = (ListView) findViewById(R.id.msgview);
         listenButton = (FloatingActionButton) findViewById(R.id.btn_mic);
         chatText = (EditText) findViewById(R.id.msg);
+        progress = findViewById(R.id.progress);
+        speechInputView = findViewById(R.id.speech_input_view);
+        speechProgressView = (SpeechProgressView) findViewById(R.id.speech_progress);
 
         pop_in_anim = AnimationUtils.loadAnimation(this, R.anim.pop_in);
         pop_out_anim = AnimationUtils.loadAnimation(this, R.anim.pop_out);
@@ -248,9 +256,8 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
     }
 
     private boolean sendResponse(String text) {
-        if (text.length() == 0)
-            return false;
-        chatArrayAdapter.add(new ChatMessage(!rightSide, text));
+        botChatMessage = new ChatMessage(!rightSide, text);
+        chatArrayAdapter.add(botChatMessage);
         return true;
     }
 
@@ -398,7 +405,8 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
         try {
             JSONObject responseObj = new JSONObject(response);
             String message = responseObj.getString("result");
-            sendResponse(message);
+            botChatMessage.setMessage(message);
+            chatArrayAdapter.notifyDataSetChanged();
             speakerbox.play(message);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -414,12 +422,20 @@ public class MainActivity extends AppCompatActivity implements AIListener, OnSpe
 
     @Override
     public void onBeforeRequest(String query) {
-        sendChatMessage(query);
+        speechProgressView.stop();
+        progress.setVisibility(View.GONE);
+        speechInputView.setVisibility(View.VISIBLE);
+        if(!TextUtils.isEmpty(query)) {
+            sendChatMessage(query);
+            sendResponse("");
+        }
     }
 
     @Override
     public void onSpeechStart() {
-
+        speechInputView.setVisibility(View.GONE);
+        progress.setVisibility(View.VISIBLE);
+        speechProgressView.play();
     }
 
     @Override
