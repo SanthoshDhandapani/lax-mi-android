@@ -56,5 +56,9 @@
         android:id="@+id/fuel"
         android:visibility="gone"
         layout="@layout/fuel_card"/>
+    <include
+        android:id="@+id/journeys"
+        android:visibility="gone"
+        layout="@layout/journeys_card"/>
 </LinearLayout>
 

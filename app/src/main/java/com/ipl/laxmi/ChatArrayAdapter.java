@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import net.gotev.speech.ui.SpeechProgressView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +48,15 @@ class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
 
     public View getView(int position, View row, ViewGroup parent) {
         ChatMessage chatMessageObj = getItem(position);
+        JSONArray data = null;
+        if(chatMessageObj.data!=null) {
+            try {
+                data = chatMessageObj.data.getJSONArray("Data");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (chatMessageObj.rightSide) {
             row = inflater.inflate(R.layout.right, parent, false);
