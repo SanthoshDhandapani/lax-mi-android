@@ -27,79 +27,11 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
             android:textStyle="bold" />
-
         <LinearLayout
+            android:id="@+id/remainder_item_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <net.steamcrafted.materialiconlib.MaterialIconView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:gravity="center_vertical"
-                android:scaleType="center"
-                app:materialIcon="check"
-                app:materialIconColor="@color/colorPrimaryDark"
-                app:materialIconSize="24dp" />
-
-            <TextView
-                android:id="@+id/remainder_item1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/sample"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <net.steamcrafted.materialiconlib.MaterialIconView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:gravity="center_vertical"
-                android:scaleType="center"
-                app:materialIcon="check"
-                app:materialIconColor="@color/colorPrimaryDark"
-                app:materialIconSize="24dp" />
-
-
-            <TextView
-                android:id="@+id/remainder_item2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/sample"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <net.steamcrafted.materialiconlib.MaterialIconView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:gravity="center_vertical"
-                android:scaleType="center"
-                app:materialIcon="check"
-                app:materialIconColor="@color/colorPrimaryDark"
-                app:materialIconSize="24dp" />
-
-
-            <TextView
-                android:id="@+id/remainder_item3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/sample"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
+            android:orientation="vertical">
         </LinearLayout>
 
     </LinearLayout>

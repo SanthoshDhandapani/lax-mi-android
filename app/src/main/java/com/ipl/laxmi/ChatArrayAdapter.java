@@ -17,6 +17,7 @@ import net.gotev.speech.ui.SpeechProgressView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
     public final String ACTION_REQUIRED_THINGS = "necessarythings";
     public final String ACTION_FUEL_LEVEL = "fuellevel";
     public final String ACTION_JOUNEYS = "journeys";
-
+    LayoutInflater inflater;
     @Override
     public void add(ChatMessage object) {
         chatMessageList.add(object);
@@ -40,6 +41,7 @@ class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
 
     public ChatArrayAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
+        inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
     }
 
@@ -64,48 +66,63 @@ class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
             }
         }
 
-        LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         if (chatMessageObj.rightSide) {
             row = inflater.inflate(R.layout.right, parent, false);
         } else {
             row = inflater.inflate(R.layout.left, parent, false);
-
-            boolean isRemainder = true;
-            boolean isFuel = true;
-            boolean isJounney = false;
-
-            if(isRemainder) {
-                View fuelCard = row.findViewById(R.id.remainder_card_include);
-                fuelCard.setVisibility(View.VISIBLE);
-            }
-
-            if(isFuel) {
-                View fuelCard = row.findViewById(R.id.fuel_card_include);
-                fuelCard.setVisibility(View.VISIBLE);
-                LinearLayout fuelViewRoot = (LinearLayout) row.findViewById(R.id.fuel_item_root);
-                View fuelItem = inflater.inflate(R.layout.fuel_item, null);
-                fuelViewRoot.addView(fuelItem);
-            }
-
-            if(isJounney) {
-                View journeyCard = row.findViewById(R.id.journey_card_include);
-                journeyCard.setVisibility(View.VISIBLE);
-            }
-
-
-
             //speechProgressView = (SpeechProgressView) row.findViewById(R.id.progress);
         }
         chatText = (TextView) row.findViewById(R.id.msgr);
         chatText.setText(chatMessageObj.message);
 
-        if(action.equals(ACTION_JOUNEYS)) {
+        if(action.equals(ACTION_REQUIRED_THINGS)) {
+            View remainderCard = row.findViewById(R.id.remainder_card_include);
+            remainderCard.setVisibility(View.VISIBLE);
+            LinearLayout remainderRoot = row.findViewById(R.id.remainder_item_root);
 
+            for (int index=0;index<data.length();index++) {
+                View remainderItemROw = inflater.inflate(R.layout.remainder_row, null);
+                try {
+                    ((TextView)remainderItemROw.findViewById(R.id.remainder_item1)).setText(data.get(index).toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+               // fuelViewRoot.addView(fuelItem);
+                remainderRoot.addView(remainderItemROw);
+            }
         }
+
         else if(action.equals(ACTION_FUEL_LEVEL)) {
-
+            View fuelCard = row.findViewById(R.id.fuel_card_include);
+            fuelCard.setVisibility(View.VISIBLE);
+            LinearLayout fuelViewRoot = row.findViewById(R.id.fuel_item_root);
+            for (int index=0;index<data.length();index++) {
+                View fuelItem = inflater.inflate(R.layout.fuel_item, null);
+                try {
+                    JSONObject jsonObject = new JSONObject(data.get(index).toString());
+                    ((TextView)fuelItem.findViewById(R.id.data_1)).setText(jsonObject.getString("date"));
+                    ((TextView)fuelItem.findViewById(R.id.data_2)).setText(jsonObject.getString("last_prices"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                fuelViewRoot.addView(fuelItem);
+            }
         } else if(action.equals(ACTION_JOUNEYS)) {
-
+            View journeyCard = row.findViewById(R.id.journey_card_include);
+            journeyCard.setVisibility(View.VISIBLE);
+            LinearLayout fuelViewRoot = row.findViewById(R.id.journey_item_root);
+            for (int index=0;index<data.length();index++) {
+                View fuelItem = inflater.inflate(R.layout.fuel_item, null);
+                try {
+                    JSONObject jsonObject = new JSONObject(data.get(index).toString());
+                    ((TextView)fuelItem.findViewById(R.id.data_1)).setText(jsonObject.getString("Date"));
+                    ((TextView)fuelItem.findViewById(R.id.data_2)).setText(jsonObject.getString("Location"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                fuelViewRoot.addView(fuelItem);
+            }
         }
         /*if(speechProgressView!=null) {
             if (TextUtils.isEmpty(chatMessageObj.message)) {

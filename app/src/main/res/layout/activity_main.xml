@@ -33,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center_horizontal"
             android:clickable="true"
             android:weightSum="15"
             android:layout_margin="2dp"
@@ -40,6 +41,7 @@
 
             <EditText
                 android:id="@+id/msg"
+                android:visibility="gone"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="14"
@@ -94,7 +96,7 @@
     <View
         android:id="@+id/screen"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         android:layout_marginBottom="100dp">
     </View>
 </RelativeLayout>

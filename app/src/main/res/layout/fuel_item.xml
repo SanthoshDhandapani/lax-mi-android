@@ -6,10 +6,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
 
             <TextView
-                android:id="@+id/header1"
+                android:id="@+id/data_1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -18,7 +20,7 @@
                 android:layout_weight="0.5" />
 
             <TextView
-                android:id="@+id/header2"
+                android:id="@+id/data_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
