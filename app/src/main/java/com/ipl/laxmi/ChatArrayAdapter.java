@@ -93,7 +93,7 @@ class ChatArrayAdapter extends ArrayAdapter<ChatMessage> {
             }
         }
 
-        else if(action.equals(ACTION_FUEL_LEVEL)) {
+        else if(MainActivity.NAME.equals(MainActivity.SAN)&&action.equals(ACTION_FUEL_LEVEL)) {
             View fuelCard = row.findViewById(R.id.fuel_card_include);
             fuelCard.setVisibility(View.VISIBLE);
             LinearLayout fuelViewRoot = row.findViewById(R.id.fuel_item_root);
